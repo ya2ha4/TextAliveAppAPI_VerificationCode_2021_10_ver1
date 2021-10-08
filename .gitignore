@@ -1,0 +1,8 @@
+node_modules/
+dev/
+docs/
+.parcel-cache/
+.DS_Store
+.cache/
+.idea/
+voice-shooter/src/assets/fft/build/*
