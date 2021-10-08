@@ -5,6 +5,10 @@
 - Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある
 - 頻繁にビート間隔が変動している
 
+問い合わせ内容の症状は全て本プログラムにおいて
+- マジカルミライ2021プログラミングコンテストの対象楽曲全てで発生
+- 再現性あり（毎回必ず発生）
+
 
 # 問い合わせ内容
 ## Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでに Player.timer.position を参照すると曲の長さを超える値が入ってる
@@ -75,6 +79,8 @@ Uncaught TypeError: Cannot read properties of undefined (reading 't')
 ```
 
 このエラーが発生すると Player の値を参照し表示しているものが更新されなくなってしまいます。</br>
+このエラーはサンプルプログラム (https://github.com/TextAliveJp/textalive-app-lyric-tiles) を用いて試した際には発生しておらず
+本プログラムの実装に問題がある可能性があるのではないかと思っています。</br>
 
 ### 再現方法
 楽曲を再生し最後の歌詞が終わった後、コンソール出力を確認する。</br>
@@ -122,7 +128,7 @@ http://localhost:1234/ にアクセス。</br>
 
 
 ## プログラムの動作イメージ
-![動作イメージ](doc_image/img_app.png)
+![](doc_image/img_app.png)
 
 
 ## プログラムの構成
