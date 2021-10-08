@@ -122,7 +122,7 @@ http://localhost:1234/ にアクセス。</br>
 
 
 ## プログラムの動作イメージ
-![](doc_image\img_app.png)
+![動作イメージ](doc_image/img_app.png)
 
 
 ## プログラムの構成
