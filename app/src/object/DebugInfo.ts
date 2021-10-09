@@ -91,14 +91,14 @@ export default class DebugInfo {
             songInfoList.push(`声量(word): ${this.getFormatted(wordAmplitude)}`);
 
             // Uncaught TypeError: Cannot read properties of undefined 回避のための処理
-            if (true || position < video.lastChar.endTime) {
+            if (true || position < video.lastChar.endTime && position < player.data.song.length * 1000) {
                 const va = player.getValenceArousal(position);
                 songInfoList.push(`V/A(time): 感情価 ${this.getFormatted(va.v, 4)}, 覚醒度 ${this.getFormatted(va.a, 4)}`);
             }
         } catch (error) {
             // pass エラー回避のための対応
             console.warn(error);
-            console.warn(`position: ${position}, video.lastChar.endTime: ${video.lastChar.endTime}`)
+            console.warn(`    position: ${position}\n    video.lastChar.endTime: ${video.lastChar.endTime}\n    player.data.song.length * 1000: ${player.data.song.length * 1000}`)
         }
 
         return songInfoList;
