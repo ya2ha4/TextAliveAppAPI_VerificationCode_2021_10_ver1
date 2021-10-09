@@ -1,11 +1,11 @@
 # 概要
-本プログラムは textalive-app-api (ver.0.3.0) において以下の挙動に関する問い合わせのための検証用に作成したものです。
+本プログラムは textalive-app-api (ver.0.3.0) において以下の挙動に関する問い合わせのための検証用に作成したものです。</br>
 - Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでにPlayer.timer.position を参照すると曲の長さを超える値が入ってる
 - 歌詞情報のないタイミングで Player.data.getVocalAmplitude() にて声量を取得しても値が常に 0 を超えている
 - Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある
 - 頻繁にビート間隔が変動している
 
-問い合わせ内容の症状は全て本プログラムにおいて
+問い合わせ内容の症状は全て本プログラムにおいて</br>
 - マジカルミライ2021プログラミングコンテストの対象楽曲全てで発生
 - 再現性あり（毎回必ず発生）
 
@@ -79,7 +79,7 @@ Uncaught TypeError: Cannot read properties of undefined (reading 't')
 ```
 
 このエラーが発生すると Player の値を参照し表示しているものが更新されなくなってしまいます。</br>
-このエラーはサンプルプログラム (https://github.com/TextAliveJp/textalive-app-lyric-tiles) を用いて試した際には発生しておらず
+このエラーはサンプルプログラム (https://github.com/TextAliveJp/textalive-app-lyric-tiles) を用いて試した際には発生しておらず</br>
 本プログラムの実装に問題がある可能性があるのではないかと思っています。</br>
 
 ### 再現方法
