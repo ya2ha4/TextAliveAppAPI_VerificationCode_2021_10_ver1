@@ -66,7 +66,7 @@ Player.video.findWord(Player.timer.position) にて歌詞情報があるかチ�
 
 ## Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある
 ### 症状
-Player.video.lastChar.endTime + OFFSET < position (OFFSETは数秒程度を表す値) を満たす状態で</br>
+Player.video.lastChar.endTime + OFFSET < position (OFFSETは数秒程度を表す値) && position < player.data.song.length * 1000 を満たす状態で</br>
 Player.getValenceArousal(position); を実行すると以下のエラーが発生しました。</br>
 
 ```
@@ -113,6 +113,10 @@ try-catch にてエラーを無視する。</br>
 楽曲のBPM推定、テンポ推定は難しい技術課題であると認識しておりますが、</br>
 Aメロ、Bメロ、サビなどの単位で値が安定しているとアプリ側で扱いやすいので</br>
 改善いただけると助かります。（楽曲のコンセプトで意図してリズム難になっているものを除く）</br>
+</br>
+また、曲の「基本的なBPM」や「最遅時のBPM」「最速時のBPM」などが取得できると便利かなと思っています。</br>
+「基本的なBPM」の定義は何とするのが適切か私自身適切な判断が出来ていないのですが（曲全体の最頻値？中央値？、曲全体ではなくサビのみを考慮した方が良いのか etc.）</br>
+各ビート情報のビート間隔に揺らぎがある都合、導出が難しい為 V/A の中央値 (player.data.getMedianValenceArousal()) のように API で取得できると便利かなと思っております。</br>
 
 
 # 検証用プログラム
@@ -161,7 +165,7 @@ Player クラスを保持、イベントハンドラの登録を行っている�
 毎フレーム Player.timer.position を参照しています。</br>
 </br>
 以下の問い合わせ内容の検証コードはこのファイル内 TimeInfoObject.updateText() を確認して下さい。</br>
-「Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでにPlayer.timer.position を参照すると曲の長さを超える値が入ってる」</br>
+「Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでに Player.timer.position を参照すると曲の長さを超える値が入ってる」</br>
 
 ### object/ImageButtonObject.ts
 PauseButtonObjectを実装するためのクラス。</br>
