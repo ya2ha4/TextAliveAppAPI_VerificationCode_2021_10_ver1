@@ -13,6 +13,8 @@ export default class TextaliveApiManager {
 
     private isChorus: boolean = false;
 
+    private preFrameTime: number;
+
     constructor(url: string, options?: PlayerVideoOptions) {
         this.musicUrl = url;
         this.options = options ? options : null;
@@ -56,6 +58,12 @@ export default class TextaliveApiManager {
         //console.log("called onTimeUpdate()");
 
         this.isChorus = this.player.findChorus(position) != null;
+
+        const nowFrameTime = performance.now();
+        if (this.preFrameTime) {
+            console.log(`[TextaliveApiManager] elapsed time: ${(nowFrameTime - this.preFrameTime)}`)
+        }
+        this.preFrameTime = nowFrameTime;
     }
 
     public getPositionTime(): number {

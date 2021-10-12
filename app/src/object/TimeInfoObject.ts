@@ -17,6 +17,8 @@ export default class TimeInfoObject {
     private _textaliveApiManager: TextaliveApiManager;
     private _dispTime: boolean;
 
+    private preFrameTime: number;
+
     private static readonly IMAGE_DEPTH_VALUE_MIN: number = 0;
     private static readonly IMAGE_DEPTH_VALUE_MAX: number = 1;
     private static readonly TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle =
@@ -106,6 +108,12 @@ export default class TimeInfoObject {
             console.warn(`曲の長さを超える値が player.timer.position に入っています ${this._textaliveApiManager.player.timer.position}`);
         }
         this._songLengthText.setText(this.makeTimeString(this._songLength));
+
+        const nowFrameTime = performance.now();
+        if (this.preFrameTime) {
+            console.log(`[TimeInfoObject] elapsed time: ${(nowFrameTime - this.preFrameTime)}`)
+        }
+        this.preFrameTime = nowFrameTime;
     }
 
     private makeTimeString(time_ms: number): string {

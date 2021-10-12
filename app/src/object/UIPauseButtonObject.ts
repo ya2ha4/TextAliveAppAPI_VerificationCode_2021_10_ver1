@@ -101,9 +101,11 @@ export default class UIPauseButtonObject {
             switch (status) {
                 case "play":
                     this._textaliveManager.player.requestPause();
+                    console.log(`[UIPauseButtonObject] Player.requestPause()`);
                     break;
                 case "pause":
                     this._textaliveManager.player.requestPlay();
+                    console.log(`[UIPauseButtonObject] Player.requestPlay()`);
                     break;
             }
         }
