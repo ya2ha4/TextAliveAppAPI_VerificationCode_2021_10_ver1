@@ -7,9 +7,12 @@ export default class TextaliveApiManager {
 
     public player: Player;
 
-    // player.timer.position の有効な値を保持するための変数
+    // position の有効な値を保持するための変数
     // Player.addListener() で登録したタイミング以外で player.timer.position を参照すると曲の長さを超える値が入る為、それの回避用
     private positionTime: number = 0;
+
+    // player.timer.position の有効な値を保持するための変数
+    private timerPositionTime: number = 0;
 
     private isChorus: boolean = false;
 
@@ -46,12 +49,6 @@ export default class TextaliveApiManager {
 
     public onThrottledTimeUpdate(position): void {
         //console.log("called onThrottledTimeUpdate()");
-
-        this.positionTime = position;
-        if (this.player.data.song.length * 1000 < position) {
-            // この処理が実行される状況は確認できず
-            console.warn(`曲の長さを超える値が position に入っています ${position}`);
-        }
     }
 
     public onTimeUpdate(position): void {
@@ -61,9 +58,25 @@ export default class TextaliveApiManager {
 
         const nowFrameTime = performance.now();
         if (this.preFrameTime) {
-            console.log(`[TextaliveApiManager] elapsed time: ${(nowFrameTime - this.preFrameTime)}`)
+            console.log(`[TextaliveApiManager] elapsed time: ${(nowFrameTime - this.preFrameTime)}, pos:${this.player.timer.position}`)
         }
         this.preFrameTime = nowFrameTime;
+
+        if (this.positionTime > position) {
+            // この処理が実行される状況は確認できず
+            console.warn(`[onTimeUpdate] position の巻き戻りが発生している pre:${this.positionTime} now:${position}`);
+        }
+        this.positionTime = position;
+        if (this.player.data.song.length * 1000 < position) {
+            // この処理が実行される状況は確認できず
+            console.warn(`曲の長さを超える値が position に入っています ${position}`);
+        }
+        
+        if (this.timerPositionTime > this.player.timer.position) {
+            // この処理が実行される状況は確定ではないものの発生することがある
+            console.warn(`[onTimeUpdate] Player.timer.position の巻き戻りが発生している pre:${this.timerPositionTime} now:${this.player.timer.position}`);
+        }
+        this.timerPositionTime = this.player.timer.position;
     }
 
     public getPositionTime(): number {

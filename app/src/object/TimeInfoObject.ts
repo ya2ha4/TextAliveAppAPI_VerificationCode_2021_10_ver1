@@ -19,6 +19,8 @@ export default class TimeInfoObject {
 
     private preFrameTime: number;
 
+    private _preTimerPosition: number; // Player.timer.position 保持用
+
     private static readonly IMAGE_DEPTH_VALUE_MIN: number = 0;
     private static readonly IMAGE_DEPTH_VALUE_MAX: number = 1;
     private static readonly TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle =
@@ -36,6 +38,7 @@ export default class TimeInfoObject {
         this._nowTimeText = null;
         this._textaliveApiManager = null;
         this._dispTime = false;
+　　　　　　　this._preTimerPosition = 0;
     }
 
     public create(param: TimeInfoObjectCreateParam): void {
@@ -111,9 +114,15 @@ export default class TimeInfoObject {
 
         const nowFrameTime = performance.now();
         if (this.preFrameTime) {
-            console.log(`[TimeInfoObject] elapsed time: ${(nowFrameTime - this.preFrameTime)}`)
+            console.log(`[TimeInfoObject] elapsed time: ${(nowFrameTime - this.preFrameTime)}, pos:${this._textaliveApiManager.player.timer.position}`)
         }
         this.preFrameTime = nowFrameTime;
+
+        const nowPos = this._textaliveApiManager.player.timer.position;
+        if (this._preTimerPosition > nowPos) {
+            console.warn(`[TimeInfoObject] Player.timer.position の巻き戻りが発生している pre:${this._preTimerPosition} now:${nowPos}`);
+        }
+        this._preTimerPosition = nowPos;
     }
 
     private makeTimeString(time_ms: number): string {
