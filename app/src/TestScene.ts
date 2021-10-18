@@ -39,6 +39,7 @@ export default class TestScene extends Phaser.Scene {
         // 4: Freedom!
         // 5: 密かなる交信曲
         // 6: 嘘も本当も君だから
+        // 7: 初音天地開闢神話
         const selectedMusicId = 1;
         const selectedMusic = buildMusicInfo().find((music) => music.id === selectedMusicId);
 

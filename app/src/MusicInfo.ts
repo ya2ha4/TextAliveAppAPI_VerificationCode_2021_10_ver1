@@ -111,5 +111,13 @@ export function buildMusicInfo(): MusicInfo[] {
         },
     };
 
-    return [natsu, first_note, kokoro, freedom, hisoka, usomo];
+    let kaibyaku: MusicInfo = {
+        id: 7,
+        //title: "初音天地開闢神話",
+        //author: "cosMo@暴走P",
+        url: "https://www.youtube.com/watch?v=8J6SMoVd5BY",
+        // playerVideoOptions: マジカルミライ2021プログラミングコンテストの対象楽曲ではないので適切な設定不明
+    };
+
+    return [natsu, first_note, kokoro, freedom, hisoka, usomo, kaibyaku];
 }
