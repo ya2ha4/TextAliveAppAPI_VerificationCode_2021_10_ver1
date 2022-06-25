@@ -1,9 +1,10 @@
 # 概要
 本プログラムは textalive-app-api (ver.0.3.0) において以下の挙動に関する問い合わせのための検証用に作成したものです。</br>
-- Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでにPlayer.timer.position を参照すると曲の長さを超える値が入ってる
-- 歌詞情報のないタイミングで Player.data.getVocalAmplitude() にて声量を取得しても値が常に 0 を超えている
-- Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある
-- 頻繁にビート間隔が変動している
+問い合わせのやりとりは [Gitter Chat](https://gitter.im/textalive-app-api/community?at=615fc3307db1e3753e2b2469) をご参照下さい。</br>
+- Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでにPlayer.timer.position を参照すると曲の長さを超える値が入ってる（追記：ver.0.3.2にて解決済み）
+- 歌詞情報のないタイミングで Player.data.getVocalAmplitude() にて声量を取得しても値が常に 0 を超えている（追記：回避策あり）
+- Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある（追記：ver.0.3.2にて解決済み）
+- 頻繁にビート間隔が変動している（追記：ver.0.3.2時点では工夫が必要）
 
 問い合わせ内容の症状は全て本プログラムにおいて</br>
 - マジカルミライ2021プログラミングコンテストの対象楽曲全てで発生
@@ -12,6 +13,9 @@
 
 # 問い合わせ内容
 ## Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでに Player.timer.position を参照すると曲の長さを超える値が入ってる
+### 追記：問題解消済み
+ver.0.3.2 にて不具合修正が行われています。</br>
+
 ### 症状
 Player.requestPlay() 実行後、PlayerEventListener.onTimeUpdate() が呼ばれるタイミングまでに</br>
 Player.timer.position を参照すると曲の長さを超える値が入っています。</br>
@@ -46,6 +50,12 @@ App API 側で常に問題のない値が取得できるようダブルバッフ
 
 
 ## 歌詞情報のないタイミングで Player.data.getVocalAmplitude() にて声量を取得しても値が常に 0 を超えている
+### 追記：問い合わせに対する回答 
+Gitter textalive-app-api/community より引用</br>
+> こちらは歌声分離をした結果の音量を計算するもので、必ずしも 0 にはなりません。アルゴリズムの精度上の限界ということになります。発声区間かどうかの判定には findWord, findChar などを利用いただくのが確実です。
+
+回答の通り Player.video.findWord(Player.timer.position) のようにすることで対応する必要があるようです。
+
 ### 症状
 const word = Player.video.findWord(Player.timer.position); (word == null) を満たす状態で</br>
 Player.data.getVocalAmplitude(Player.timer.position) にて声量を取得しても値が常に 0 を超えています。</br>
@@ -65,6 +75,9 @@ Player.video.findWord(Player.timer.position) にて歌詞情報があるかチ�
 
 
 ## Player.video.lastChar.endTime を超える値で Player.getValenceArousal() を実行するとエラーが発生する場合がある
+### 追記：問題解消済み
+ver.0.3.2 にて不具合修正が行われています。</br>
+
 ### 症状
 Player.video.lastChar.endTime + OFFSET < position (OFFSETは数秒程度を表す値) && position < player.data.song.length * 1000 を満たす状態で</br>
 Player.getValenceArousal(position); を実行すると以下のエラーが発生しました。</br>
@@ -95,6 +108,12 @@ try-catch にてエラーを無視する。</br>
 
 
 ## 頻繁にビート間隔が変動している
+### 追記：問い合わせに対する回答 
+Gitter textalive-app-api/community より引用</br>
+>こちらは曲中でビート間隔が変動するものに対応する関係上、ビートを自動検出する技術ではどうしても揺らぎが出てしまいます。ただ、今回のプログラミング・コンテスト課題曲については自動検出後に手動で補正をかけています。
+
+ビート間隔の値を使用する場合は揺らぎが発生する前提で使用する必要があるようです。
+
 ### 症状
 ほぼ1ビート毎にビート間隔 (IBeat.duration) が変わっており、BPMの表示やBPMに即した演出を実装しようとするとそれらの表示が安定しなくなります。</br>
 
